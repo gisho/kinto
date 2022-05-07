@@ -27,8 +27,8 @@ def render_template(template, destination, **kwargs):
             output.write(rendered)
 
 
-postgresql_url = "postgresql://postgres:postgres@localhost/postgres"
-redis_url = "redis://localhost:6379"
+postgresql_url = os.getenv("DATABASE_URL","postgresql://postgres:postgres@localhost/postgres")
+redis_url = os.getenv("REDIS_URL","redis://localhost:6379")
 
 backend_to_values = {
     "postgresql": {

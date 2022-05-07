@@ -1,5 +1,12 @@
 # Mozilla Kinto server
-
+ARG KINTO_CACHE_BACKEND
+ARG KINTO_CACHE_HOSTS
+ARG KINTO_STORAGE_BACKEND
+ARG KINTO_STORAGE_URL
+ARG KINTO_PERMISSION_BACKEND
+ARG KINTO_PERMISSION_URL
+ARG REDIS_URL
+ARG DATABASE_URL
 FROM node:lts-bullseye-slim as node-builder
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl
 COPY scripts/build-kinto-admin.sh .
@@ -31,7 +38,7 @@ ENV KINTO_INI=/etc/kinto/kinto.ini \
 
 RUN \
     pip install -e /app[postgresql,memcached,monitoring] -c /app/requirements.txt && \
-    kinto init --ini $KINTO_INI --host 0.0.0.0 --backend=memory --cache-backend=memory
+    kinto init --ini $KINTO_INI --host 0.0.0.0 --backend=postgresql --cache-backend=redis
 
 USER app
 # Run database migrations and start the kinto server
